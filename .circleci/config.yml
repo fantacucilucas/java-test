@@ -8,8 +8,33 @@ jobs:
       - run:
           name: Build
           command: 'mvn clean install'
+  docker:
+    machine: true
+      steps:
+        - checkout
+        - run:
+            name: Login at hub docker
+            command: 'docker login -u $DOCKER_USER -p $DOCKER_PASS'
+        - run:
+            name: Generate docker image
+            command: 'docker build . -t lucasfantacuci/apresentacao-circle-ci:${CIRCLE_BUILD_NUM}'
+        - run:
+            name: Tagging lastest build
+            command: 'docker tag lucasfantacuci/apresentacao-circle-ci:${CIRCLE_BUILD_NUM} lucasfantacuci/apresentacao-circle-ci:latest'
+        - run:
+            name: Push latest to hub docker
+            command: 'docker push lucasfantacuci/apresentacao-circle-ci:latest'
+        - run:
+            name: Push version to hub docker
+            command: 'docker push lucasfantacuci/apresentacao-circle-ci:${CIRCLE_BUILD_NUM}'
 workflows:
   version: 2
   master_workflow:
     jobs:
       - build
+      - docker:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
