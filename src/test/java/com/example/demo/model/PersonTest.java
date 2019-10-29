@@ -17,12 +17,4 @@ class PersonTest {
             Person person = new Person("");
         });
     }
-    
-    @Test
-    public void fakeError(){
-        assertThrows(IllegalArgumentException.class, () -> {
-            Person person = new Person("Lucas");
-        });
-    }
-
 }
