@@ -17,5 +17,4 @@ class PersonTest {
             Person person = new Person("");
         });
     }
-
 }
